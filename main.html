@@ -1,0 +1,17 @@
+<!doctype HTML>
+
+<head>
+    <script src="hist.js"></script>
+    <script src="dmc.js"></script>
+    <script src="ui.js"></script>
+    <script src="Chart.min.js"></script>
+</head>
+
+<body>
+    <script>   
+            ui.create();
+            hist.create();
+            dmc.init();
+            setInterval(dmc.iterate,500);
+    </script>
+</body>
