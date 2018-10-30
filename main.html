@@ -1,17 +1,23 @@
 <!doctype HTML>
 
 <head>
+    <link rel="stylesheet" href="styles.css">
     <script src="hist.js"></script>
     <script src="dmc.js"></script>
     <script src="ui.js"></script>
+    <script src="pot_draw.js"></script>
     <script src="Chart.min.js"></script>
 </head>
 
 <body>
+    <div id="pot_hist_container"></div>
     <script>   
-            ui.create();
-            hist.create();
+    	    phc = document.getElementById("pot_hist_container");
+            phc.appendChild(hist.create());
+	    phc.appendChild(pot_draw.create());
+            ui.create_chart();
+	    ui.create_controls();
             dmc.init();
-            setInterval(dmc.iterate,500);
+	    setInterval(dmc.iterate, 200);
     </script>
 </body>

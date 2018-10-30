@@ -1,11 +1,19 @@
 var hist = (function(){ // Namespace hist
 
     samples = [];
-    bins = 200;
+    bin_counts = [];
+    const bins = 200;
 
     function canv()
     {
         return document.getElementById("histogram");
+    }
+
+    function init_bins()
+    {
+	    bin_counts = [];
+	    for (var i=0; i<bins; ++i)
+	    	bin_counts.push(0);
     }
 
     return {
@@ -15,72 +23,52 @@ var hist = (function(){ // Namespace hist
             elm.height = 500;
             elm.className = "histogram";
             elm.id = "histogram";
-            document.body.append(elm);
+	    init_bins();
+	    return elm;
         },
 
         reset : function(){
             samples = [];
+	    init_bins();
             this.redraw();
         },
 
         sample : function(x){
-            samples.push(x);
-        },
-
-        get_samples : function(){
-            return samples;
+            bin_width = 1/(bins-1);
+            for (i=0; i<bins; ++i)
+            {
+                xf = i/(bins-1);
+                if (Math.abs(x-xf) <= bin_width)
+			bin_counts[i] += 1;
+			
+            }
         },
 
         redraw : function(){
             
-            min = Infinity;
-            max = -Infinity;
-            for (i in samples)
-            {
-                if (samples[i] < min)
-                    min = samples[i];
-                if (samples[i] > max)
-                    max = samples[i];
-            }
-
             c = canv();
-            bin_width = (max-min)/(bins-1);
-            xs = [];
-            ys = [];
-
-            for (i=0; i<bins; ++i)
-            {
-                xf = i/(bins-1);
-                x  = xf * max + (1-xf)*min;
-                xp = c.width * xf;
-                y = 0;
-                for (j in samples)
-                    if (Math.abs(samples[j]-x) <= bin_width)
-                        ++ y;
-                xs.push(xp);
-                ys.push(y);
-            }
-
-            max_y = -Infinity;
-            for (i in ys)
-                if (ys[i] > max_y)
-                    max_y = ys[i];
-            
             ctx = c.getContext("2d");
             ctx.fillStyle = "rgb(255,255,255)";
             ctx.fillRect(0,0,c.width,c.height);
             ctx.fillStyle = "rgb(0,0,0)";
             bin_pixel_width = Math.ceil(c.width/bins);
 
-            for (i in xs)
+            max_y = -Infinity;
+            for (i in bin_counts)
+                if (bin_counts[i] > max_y)
+                    max_y = bin_counts[i];
+
+	    total_samples = 0;
+            for (i in bin_counts)
             {
-                x = xs[i];
-                y = ((c.height-30) * ys[i])/max_y;
+                x = bin_pixel_width*i;
+                y = ((c.height-30) * bin_counts[i])/max_y;
+		total_samples += bin_counts[i];
                 ctx.fillRect(x-1,c.height-y,bin_pixel_width+2,y);
             }
 
             ctx.font = "20px Arial";
-            ctx.fillText("Samples: "+samples.length,0,20);
+            ctx.fillText("Samples: "+total_samples,0,20);
         }
     }
 
