@@ -1,0 +1,30 @@
+body
+{
+	padding: 0;
+	margin: 0;
+}
+
+div#pot_hist_container
+{
+	width: 49vw;
+	height: 100vh;
+	float: left;
+}
+
+div.chart_container
+{
+	width: 49vw;
+	float: left;
+}
+
+canvas.pot_draw
+{
+	width: 49vw;
+	height: 49vh;
+}
+
+canvas.histogram
+{
+	width: 49vw;
+	height: 50vh;
+}
