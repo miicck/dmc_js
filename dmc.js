@@ -137,6 +137,7 @@ var dmc = (function(){ // namespace dmc
                 itteration : itteration
             });
 
+	    hist.set_last_walkers(walkers);
             hist.redraw();
         }
     };

@@ -1,6 +1,7 @@
 var hist = (function(){ // Namespace hist
 
     samples = [];
+    last_walkers = [];
     bin_counts = [];
     const bins = 200;
 
@@ -44,6 +45,10 @@ var hist = (function(){ // Namespace hist
             }
         },
 
+	set_last_walkers : function(walkers){
+		last_walkers = walkers;
+	},
+
         redraw : function(){
             
             c = canv();
@@ -62,13 +67,20 @@ var hist = (function(){ // Namespace hist
             for (i in bin_counts)
             {
                 x = bin_pixel_width*i;
-                y = ((c.height-30) * bin_counts[i])/max_y;
+                y = ((c.height-60) * bin_counts[i])/max_y;
 		total_samples += bin_counts[i];
-                ctx.fillRect(x-1,c.height-y,bin_pixel_width+2,y);
+                ctx.fillRect(x-1,c.height-y-30,bin_pixel_width+2,y);
             }
 
             ctx.font = "20px Arial";
             ctx.fillText("Samples: "+total_samples,0,20);
+	    ctx.fillStyle = "rgba(0,0,255,0.1)";
+
+	    for (i in last_walkers)
+	    {
+	    	x = last_walkers[i]*c.width;
+		ctx.fillRect(x-5,c.height-30, 30, 30);
+	    }
         }
     }
 
